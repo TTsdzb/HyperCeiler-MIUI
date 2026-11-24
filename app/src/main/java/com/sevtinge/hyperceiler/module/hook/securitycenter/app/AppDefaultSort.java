@@ -28,7 +28,7 @@ import com.sevtinge.hyperceiler.utils.prefs.PrefsUtils;
 
 import java.lang.reflect.Field;
 
-import de.robv.android.xposed.XposedHelpers;
+import com.sevtinge.hyperceiler.xposedcompat.XposedHelpers;
 
 public class AppDefaultSort extends BaseHook {
 

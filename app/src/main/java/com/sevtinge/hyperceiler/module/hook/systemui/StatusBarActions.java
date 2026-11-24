@@ -34,8 +34,8 @@ import android.view.View;
 
 import com.sevtinge.hyperceiler.module.base.BaseHook;
 
-import de.robv.android.xposed.XposedBridge;
-import de.robv.android.xposed.XposedHelpers;
+import com.sevtinge.hyperceiler.xposedcompat.XposedBridge;
+import com.sevtinge.hyperceiler.xposedcompat.XposedHelpers;
 
 public class StatusBarActions extends BaseHook {
 

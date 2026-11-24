@@ -89,8 +89,9 @@ fun loadPropertiesFromFile(fileName: String): Properties? {
 
 android {
     namespace = "com.sevtinge.hyperceiler"
-    compileSdk = 35
-    buildToolsVersion = "35.0.0"
+    compileSdk = 37
+    compileSdkMinor = 2
+    buildToolsVersion = "37.0.0"
 
     defaultConfig {
         applicationId = namespace
@@ -130,9 +131,24 @@ android {
         additionalParameters += listOf("--allow-reserved-package-id", "--package-id", "0x36")
     }
 
+    lint {
+        disable += "Instantiatable"
+    }
+
     packaging {
         resources {
-            excludes += listOf("/META-INF/**", "/kotlin/**", "/*.txt", "/*.bin", "/*.json")
+            merges += listOf("META-INF/xposed/*")
+            excludes += listOf(
+                "/META-INF/{AL2.0,LGPL2.1}",
+                "/META-INF/*.kotlin_module",
+                "/META-INF/*.version",
+                "/META-INF/services/**",
+                "/META-INF/androidx.*",
+                "/kotlin/**",
+                "/*.txt",
+                "/*.bin",
+                "/*.json"
+            )
         }
         dex {
             useLegacyPackaging = true
@@ -248,14 +264,13 @@ android {
 
 dependencies {
     compileOnly(project(":hidden-api"))
-    compileOnly(libs.xposed.api)
+    compileOnly(libs.libxposed.api)
 
+    implementation(libs.libxposed.service)
     implementation(libs.dexkit)
     implementation(libs.mmkv)
-    implementation(libs.ezxhelper)
     implementation(libs.hiddenapibypass)
     implementation(libs.gson)
-    implementation(libs.hooktool)
     implementation(libs.lyric.getter.api)
     implementation(libs.lunarcalendar)
 

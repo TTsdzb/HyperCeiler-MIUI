@@ -35,7 +35,7 @@ import org.luckypray.dexkit.result.base.BaseData;
 
 import java.lang.reflect.Method;
 
-import de.robv.android.xposed.XposedHelpers;
+import com.sevtinge.hyperceiler.xposedcompat.XposedHelpers;
 
 public class MaxScreenBrightness extends BaseHook {
 

@@ -33,7 +33,7 @@ import com.sevtinge.hyperceiler.module.hook.systemui.statusbar.model.public.Mobi
 import com.sevtinge.hyperceiler.module.hook.systemui.statusbar.model.public.MobilePrefs.verticalOffset
 import com.sevtinge.hyperceiler.utils.devicesdk.*
 import com.sevtinge.hyperceiler.utils.devicesdk.DisplayUtils.*
-import de.robv.android.xposed.*
+import com.sevtinge.hyperceiler.xposedcompat.*
 
 object MobileTypeSingleHook : BaseHook() {
     override fun init() {

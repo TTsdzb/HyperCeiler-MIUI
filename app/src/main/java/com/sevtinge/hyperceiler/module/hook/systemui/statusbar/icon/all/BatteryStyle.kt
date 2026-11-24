@@ -27,7 +27,7 @@ import com.github.kyuubiran.ezxhelper.finders.MethodFinder.`-Static`.methodFinde
 import com.sevtinge.hyperceiler.module.base.*
 import com.sevtinge.hyperceiler.utils.devicesdk.*
 import com.sevtinge.hyperceiler.utils.devicesdk.DisplayUtils.*
-import de.robv.android.xposed.*
+import com.sevtinge.hyperceiler.xposedcompat.*
 
 object BatteryStyle : BaseHook() {
     private val fontSize by lazy {

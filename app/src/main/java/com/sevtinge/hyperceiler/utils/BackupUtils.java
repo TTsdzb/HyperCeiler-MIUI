@@ -117,5 +117,6 @@ public class BackupUtils {
         }
         bufferedReader.close();
         edit.apply();
+        PrefsUtils.syncAllToRemote();
     }
 }

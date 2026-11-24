@@ -29,8 +29,8 @@ import android.view.ViewGroup;
 
 import com.sevtinge.hyperceiler.module.base.BaseHook;
 
-import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XposedHelpers;
+import com.sevtinge.hyperceiler.xposedcompat.XC_MethodHook;
+import com.sevtinge.hyperceiler.xposedcompat.XposedHelpers;
 
 public class BrightnessPct extends BaseHook {
     @Override

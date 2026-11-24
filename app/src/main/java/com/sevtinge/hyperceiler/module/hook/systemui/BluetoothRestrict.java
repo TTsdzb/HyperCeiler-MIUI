@@ -22,7 +22,7 @@ import android.content.Context;
 
 import com.sevtinge.hyperceiler.module.base.BaseHook;
 
-import de.robv.android.xposed.XC_MethodReplacement;
+import com.sevtinge.hyperceiler.xposedcompat.XC_MethodReplacement;
 
 public class BluetoothRestrict extends BaseHook {
 

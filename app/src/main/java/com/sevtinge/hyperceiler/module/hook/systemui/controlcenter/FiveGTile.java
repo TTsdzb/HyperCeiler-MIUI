@@ -45,8 +45,8 @@ import com.sevtinge.hyperceiler.utils.devicesdk.TelephonyManager;
 
 import java.lang.reflect.Array;
 
-import de.robv.android.xposed.XC_MethodHook.MethodHookParam;
-import de.robv.android.xposed.XposedHelpers;
+import com.sevtinge.hyperceiler.xposedcompat.XC_MethodHook.MethodHookParam;
+import com.sevtinge.hyperceiler.xposedcompat.XposedHelpers;
 
 public class FiveGTile extends TileUtils {
     String mNfcTileClsName = "com.android.systemui.qs.tiles.MiuiNfcTile";

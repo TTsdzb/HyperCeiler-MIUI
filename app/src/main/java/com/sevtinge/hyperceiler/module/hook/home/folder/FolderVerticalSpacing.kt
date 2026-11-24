@@ -22,7 +22,7 @@ import android.widget.*
 import com.sevtinge.hyperceiler.module.base.*
 import com.sevtinge.hyperceiler.utils.*
 import com.sevtinge.hyperceiler.utils.devicesdk.DisplayUtils.*
-import de.robv.android.xposed.*
+import com.sevtinge.hyperceiler.xposedcompat.*
 
 object FolderVerticalSpacing : BaseHook() {
     override fun init() {

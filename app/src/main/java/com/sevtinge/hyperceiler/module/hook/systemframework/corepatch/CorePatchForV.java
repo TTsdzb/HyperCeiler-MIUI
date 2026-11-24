@@ -1,6 +1,6 @@
 package com.sevtinge.hyperceiler.module.hook.systemframework.corepatch;
 
-import de.robv.android.xposed.XposedHelpers;
+import com.sevtinge.hyperceiler.xposedcompat.XposedHelpers;
 
 public class CorePatchForV extends CorePatchForU {
     @Override

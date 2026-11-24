@@ -26,7 +26,7 @@ import com.github.kyuubiran.ezxhelper.EzXHelper.appContext
 import com.sevtinge.hyperceiler.module.base.*
 import com.sevtinge.hyperceiler.utils.*
 import com.sevtinge.hyperceiler.utils.devicesdk.DisplayUtils.*
-import de.robv.android.xposed.*
+import com.sevtinge.hyperceiler.xposedcompat.*
 
 object RecentResource : BaseHook() {
     private val hookMap = ResourcesHookMap<String, ResourcesHookData>()

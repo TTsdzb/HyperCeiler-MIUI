@@ -22,7 +22,7 @@ import com.github.kyuubiran.ezxhelper.HookFactory.`-Static`.createHook
 import com.sevtinge.hyperceiler.module.base.*
 import com.sevtinge.hyperceiler.module.base.dexkit.*
 import com.sevtinge.hyperceiler.utils.api.LazyClass.AndroidBuildCls
-import de.robv.android.xposed.*
+import com.sevtinge.hyperceiler.xposedcompat.*
 import java.lang.reflect.*
 
 object UnlockLeicaFilter : BaseHook() {

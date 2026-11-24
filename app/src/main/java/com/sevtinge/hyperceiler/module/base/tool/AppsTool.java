@@ -34,7 +34,8 @@ import android.graphics.Matrix;
 import android.graphics.Shader;
 import android.net.Uri;
 import android.os.Environment;
-import android.os.FileObserver;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.UserHandle;
 import android.util.Log;
 import android.util.LruCache;
@@ -46,22 +47,20 @@ import com.sevtinge.hyperceiler.utils.api.ProjectApi;
 import com.sevtinge.hyperceiler.utils.log.AndroidLogUtils;
 import com.sevtinge.hyperceiler.utils.prefs.PrefsUtils;
 import com.sevtinge.hyperceiler.utils.shell.ShellInit;
+import com.sevtinge.hyperceiler.xposedcompat.XposedHelpers;
+import com.sevtinge.hyperceiler.xposedcompat.callbacks.XC_LoadPackage;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
-import de.robv.android.xposed.XposedHelpers;
-import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import fan.appcompat.app.AlertDialog;
 
 public class AppsTool {
 
     private static final String TAG = "AppsTool";
 
-    public static boolean isModuleActive = false;
-    public static int XposedVersion = 0;
+    public static volatile boolean isModuleActive = false;
+    public static volatile int XposedVersion = 0;
 
     public static LruCache<String, Bitmap> memoryCache = new LruCache<>((int) (Runtime.getRuntime().maxMemory() / 1024) / 2) {
         @Override
@@ -131,48 +130,11 @@ public class AppsTool {
         title.getPaint().setShader(shimmer);
     }
 
-    // Permissions 权限
-    @SuppressLint({"SetWorldReadable", "SetWorldWritable"})
+    // Permissions 权限 (obsolete under libxposed RemotePreferences; kept as safe no-ops for callers)
     public static void fixPermissionsAsync(Context context) {
-        Executor executor = Executors.newSingleThreadExecutor();
-        executor.execute(() -> {
-            try {
-                Thread.sleep(500);
-            } catch (Throwable ignore) {
-            }
-            File pkgFolder = context.getDataDir();
-            if (pkgFolder.exists()) {
-                pkgFolder.setExecutable(true, false);
-                pkgFolder.setReadable(true, false);
-                pkgFolder.setWritable(true, false);
-            }
-            File sharedPrefsFolder = new File(PrefsUtils.getSharedPrefsPath());
-            if (sharedPrefsFolder.exists()) {
-                sharedPrefsFolder.setExecutable(true, false);
-                sharedPrefsFolder.setReadable(true, false);
-                sharedPrefsFolder.setWritable(true, false);
-            }
-            File sharedPrefsFile = new File(PrefsUtils.getSharedPrefsFile());
-            if (sharedPrefsFile.exists()) {
-                sharedPrefsFile.setReadable(true, false);
-                sharedPrefsFile.setExecutable(true, false);
-                sharedPrefsFile.setWritable(true, false);
-            }
-        });
     }
 
     public static void registerFileObserver(Context context) {
-        try {
-            FileObserver mFileObserver = new FileObserver(new File(PrefsUtils.getSharedPrefsPath()), FileObserver.CLOSE_WRITE) {
-                @Override
-                public void onEvent(int event, String path) {
-                    AppsTool.fixPermissionsAsync(context);
-                }
-            };
-            mFileObserver.startWatching();
-        } catch (Throwable t) {
-            Log.e("prefs", "Failed to start FileObserver!");
-        }
     }
 
     public static void requestBackup(Context context) {
@@ -236,7 +198,14 @@ public class AppsTool {
     }
 
     public static void checkXposedActivateState(Context context) {
-        if (!isModuleActive) DialogHelper.showXposedActivateDialog(context);
+        if (isModuleActive || context == null) return;
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            if (isModuleActive) return;
+            if (context instanceof Activity activity && (activity.isFinishing() || activity.isDestroyed())) {
+                return;
+            }
+            DialogHelper.showXposedActivateDialog(context);
+        }, 350L);
     }
 
     public static void doRestart(Context context, String[] packageName, boolean isRestartSystem) {

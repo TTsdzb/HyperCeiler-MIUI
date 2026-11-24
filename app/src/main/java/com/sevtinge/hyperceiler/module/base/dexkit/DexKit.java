@@ -53,7 +53,7 @@ import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import de.robv.android.xposed.callbacks.XC_LoadPackage;
+import com.sevtinge.hyperceiler.xposedcompat.callbacks.XC_LoadPackage;
 
 /**
  * @author 焕晨HChen

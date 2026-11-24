@@ -25,7 +25,7 @@ import com.sevtinge.hyperceiler.utils.MathUtils;
 
 import java.util.ArrayList;
 
-import de.robv.android.xposed.XposedHelpers;
+import com.sevtinge.hyperceiler.xposedcompat.XposedHelpers;
 
 public class FixColor extends BaseHook {
     @Override

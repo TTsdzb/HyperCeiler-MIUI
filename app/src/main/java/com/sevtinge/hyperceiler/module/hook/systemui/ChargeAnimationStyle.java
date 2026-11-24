@@ -24,7 +24,7 @@ import com.sevtinge.hyperceiler.module.base.BaseHook;
 
 import java.util.Set;
 
-import de.robv.android.xposed.XposedHelpers;
+import com.sevtinge.hyperceiler.xposedcompat.XposedHelpers;
 
 public class ChargeAnimationStyle extends BaseHook {
 

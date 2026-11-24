@@ -37,7 +37,7 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-import de.robv.android.xposed.XposedHelpers;
+import com.sevtinge.hyperceiler.xposedcompat.XposedHelpers;
 
 public class NotificationRowMenu extends BaseHook {
     @Override

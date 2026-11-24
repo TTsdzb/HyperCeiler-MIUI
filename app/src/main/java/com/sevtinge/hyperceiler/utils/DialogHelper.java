@@ -23,6 +23,8 @@ import static com.sevtinge.hyperceiler.utils.log.LogManager.LOGGER_CHECKER_ERR_C
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 
 import com.sevtinge.hyperceiler.R;
@@ -33,9 +35,13 @@ import com.sevtinge.hyperceiler.utils.shell.ShellExec;
 import com.sevtinge.hyperceiler.utils.shell.ShellInit;
 import com.sevtinge.hyperceiler.view.RestartAlertDialog;
 
+import java.lang.ref.WeakReference;
+
 import fan.appcompat.app.AlertDialog;
 
 public class DialogHelper {
+
+    private static volatile WeakReference<AlertDialog> sXposedActivateDialogRef = null;
 
     public static void showDialog(Activity activity, String title, String message) {
         showDialog(activity, title, message, null);
@@ -69,7 +75,8 @@ public class DialogHelper {
     }
 
     public static void showXposedActivateDialog(Context context) {
-        new AlertDialog.Builder(context)
+        dismissXposedActivateDialogIfShowing();
+        AlertDialog dialog = new AlertDialog.Builder(context)
                 .setCancelable(false)
                 .setTitle(R.string.tip)
                 .setMessage(R.string.hook_failed)
@@ -77,6 +84,28 @@ public class DialogHelper {
                 .setPositiveButton(R.string.exit, (dialogInterface, i) -> System.exit(0))
                 .setNegativeButton(R.string.ignore, null)
                 .show();
+        sXposedActivateDialogRef = new WeakReference<>(dialog);
+    }
+
+    public static void dismissXposedActivateDialogIfShowing() {
+        Runnable dismissAction = () -> {
+            WeakReference<AlertDialog> ref = sXposedActivateDialogRef;
+            sXposedActivateDialogRef = null;
+            if (ref != null) {
+                AlertDialog dialog = ref.get();
+                if (dialog != null && dialog.isShowing()) {
+                    try {
+                        dialog.dismiss();
+                    } catch (Throwable ignored) {
+                    }
+                }
+            }
+        };
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            dismissAction.run();
+        } else {
+            new Handler(Looper.getMainLooper()).post(dismissAction);
+        }
     }
 
     public static void showCrashReportDialog(Activity activity, View view) {

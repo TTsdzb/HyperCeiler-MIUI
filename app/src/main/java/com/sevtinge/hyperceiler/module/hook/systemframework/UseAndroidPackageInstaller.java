@@ -19,33 +19,16 @@
 package com.sevtinge.hyperceiler.module.hook.systemframework;
 
 import com.sevtinge.hyperceiler.module.base.BaseHook;
+import com.sevtinge.hyperceiler.xposedcompat.XposedBridge;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Member;
 import java.lang.reflect.Method;
-
-import de.robv.android.xposed.XposedBridge;
 
 public class UseAndroidPackageInstaller extends BaseHook {
     static boolean fakeCts = false;
 
-    private final static Method deoptimizeMethod;
-
-    static {
-        Method m = null;
-        try {
-            m = XposedBridge.class.getDeclaredMethod("deoptimizeMethod", Member.class);
-        } catch (Throwable t) {
-            logE("UseAndroidPackageInstaller", "android", t);
-        }
-        deoptimizeMethod = m;
-    }
-
-    static void deoptimizeMethod(Method m) throws InvocationTargetException, IllegalAccessException {
-        if (deoptimizeMethod != null) {
-            deoptimizeMethod.invoke(null, m);
-            logD("UseAndroidPackageInstaller", "android", "Deoptimized " + m);
-        }
+    static void deoptimizeMethod(Method m) {
+        XposedBridge.deoptimizeMethod(m);
+        logD("UseAndroidPackageInstaller", "android", "Deoptimized " + m);
     }
 
     @Override

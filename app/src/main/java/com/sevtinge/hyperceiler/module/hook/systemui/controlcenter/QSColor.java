@@ -28,8 +28,8 @@ import android.widget.TextView;
 import com.sevtinge.hyperceiler.XposedInit;
 import com.sevtinge.hyperceiler.module.base.BaseHook;
 
-import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XposedHelpers;
+import com.sevtinge.hyperceiler.xposedcompat.XC_MethodHook;
+import com.sevtinge.hyperceiler.xposedcompat.XposedHelpers;
 
 public class QSColor extends BaseHook {
     private static boolean small = false;

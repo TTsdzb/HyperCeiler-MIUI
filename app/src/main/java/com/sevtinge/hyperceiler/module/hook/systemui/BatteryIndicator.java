@@ -27,7 +27,7 @@ import android.widget.FrameLayout;
 import com.sevtinge.hyperceiler.module.base.BaseHook;
 import com.sevtinge.hyperceiler.view.BatteryIndicatorView;
 
-import de.robv.android.xposed.XposedHelpers;
+import com.sevtinge.hyperceiler.xposedcompat.XposedHelpers;
 
 public class BatteryIndicator extends BaseHook {
 

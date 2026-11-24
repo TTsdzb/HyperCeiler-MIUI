@@ -19,10 +19,10 @@
 package com.sevtinge.hyperceiler.module.hook.systemframework.corepatch;
 
 import static com.sevtinge.hyperceiler.BuildConfig.DEBUG;
-import static de.robv.android.xposed.XposedHelpers.findClassIfExists;
-import static de.robv.android.xposed.XposedHelpers.findMethodExactIfExists;
+import static com.sevtinge.hyperceiler.xposedcompat.XposedHelpers.findClassIfExists;
+import static com.sevtinge.hyperceiler.xposedcompat.XposedHelpers.findMethodExactIfExists;
 
-import android.app.AndroidAppHelper;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -31,12 +31,19 @@ import android.util.Log;
 
 import com.sevtinge.hyperceiler.utils.api.ProjectApi;
 import com.sevtinge.hyperceiler.utils.prefs.PrefsUtils;
+import com.sevtinge.hyperceiler.xposedcompat.AndroidAppHelper;
+import com.sevtinge.hyperceiler.xposedcompat.IXposedHookLoadPackage;
+import com.sevtinge.hyperceiler.xposedcompat.IXposedHookZygoteInit;
+import com.sevtinge.hyperceiler.xposedcompat.XC_MethodHook;
+import com.sevtinge.hyperceiler.xposedcompat.XC_MethodReplacement;
+import com.sevtinge.hyperceiler.xposedcompat.XposedBridge;
+import com.sevtinge.hyperceiler.xposedcompat.XposedHelpers;
+import com.sevtinge.hyperceiler.xposedcompat.callbacks.XC_LoadPackage;
 
 import java.io.PrintWriter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
@@ -46,41 +53,21 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.zip.ZipEntry;
 
-import de.robv.android.xposed.IXposedHookLoadPackage;
-import de.robv.android.xposed.IXposedHookZygoteInit;
-import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XC_MethodReplacement;
-import de.robv.android.xposed.XSharedPreferences;
-import de.robv.android.xposed.XposedBridge;
-import de.robv.android.xposed.XposedHelpers;
-import de.robv.android.xposed.callbacks.XC_LoadPackage;
-
 public class CorePatchForR extends XposedHelper implements IXposedHookLoadPackage, IXposedHookZygoteInit {
-    private final static Method deoptimizeMethod;
     private static final boolean isNotReleaseVersion = !ProjectApi.isRelease();
     public static final String TAG = "[CorePatchForR]";
 
-    static {
-        Method m = null;
-        try {
-            m = XposedBridge.class.getDeclaredMethod("deoptimizeMethod", Member.class);
-        } catch (Throwable t) {
-            XposedBridge.log("[HyperCeiler][E][android]" + TAG + ": " + Log.getStackTraceString(t));
-        }
-        deoptimizeMethod = m;
-    }
-
-    static void deoptimizeMethod(Class<?> c, String n) throws InvocationTargetException, IllegalAccessException {
+    static void deoptimizeMethod(Class<?> c, String n) {
         for (Method m : c.getDeclaredMethods()) {
-            if (deoptimizeMethod != null && m.getName().equals(n)) {
-                deoptimizeMethod.invoke(null, m);
+            if (m.getName().equals(n)) {
+                XposedBridge.deoptimizeMethod(m);
                 if (isNotReleaseVersion)
                     XposedBridge.log("[HyperCeiler][D][android]" + TAG + ": Deoptimized " + m.getName());
             }
         }
     }
 
-    final XSharedPreferences prefs = new XSharedPreferences(ProjectApi.mAppModulePkg, PrefsUtils.mPrefsName);
+    final SharedPreferences prefs = PrefsUtils.getHookPrefs();
 
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam loadPackageParam) throws IllegalAccessException, InvocationTargetException, InstantiationException {

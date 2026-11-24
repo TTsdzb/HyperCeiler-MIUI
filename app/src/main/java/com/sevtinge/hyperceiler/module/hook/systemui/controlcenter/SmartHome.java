@@ -23,7 +23,7 @@ import android.widget.RelativeLayout;
 
 import com.sevtinge.hyperceiler.module.base.BaseHook;
 
-import de.robv.android.xposed.XposedHelpers;
+import com.sevtinge.hyperceiler.xposedcompat.XposedHelpers;
 
 public class SmartHome extends BaseHook {
 

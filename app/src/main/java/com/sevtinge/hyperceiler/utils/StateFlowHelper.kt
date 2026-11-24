@@ -1,7 +1,7 @@
 package com.sevtinge.hyperceiler.utils
 
 import com.github.kyuubiran.ezxhelper.*
-import de.robv.android.xposed.*
+import com.sevtinge.hyperceiler.xposedcompat.*
 
 object StateFlowHelper {
     private const val STATE_FLOW = "kotlinx.coroutines.flow.StateFlow"

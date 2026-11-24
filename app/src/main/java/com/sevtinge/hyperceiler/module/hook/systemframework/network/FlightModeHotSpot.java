@@ -24,9 +24,9 @@ import com.sevtinge.hyperceiler.module.base.BaseHook;
 import java.util.Arrays;
 import java.util.Objects;
 
-import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XposedBridge;
-import de.robv.android.xposed.XposedHelpers;
+import com.sevtinge.hyperceiler.xposedcompat.XC_MethodHook;
+import com.sevtinge.hyperceiler.xposedcompat.XposedBridge;
+import com.sevtinge.hyperceiler.xposedcompat.XposedHelpers;
 
 public class FlightModeHotSpot extends BaseHook {
     XC_MethodHook.Unhook clHook;

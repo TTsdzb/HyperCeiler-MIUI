@@ -20,17 +20,14 @@
 
 package com.sevtinge.hyperceiler.utils
 
-import android.annotation.SuppressLint
-import android.content.res.XResources
 import com.github.kyuubiran.ezxhelper.EzXHelper.classLoader
 import com.github.kyuubiran.ezxhelper.Log
+import com.sevtinge.hyperceiler.xposedcompat.XC_MethodHook
+import com.sevtinge.hyperceiler.xposedcompat.XC_MethodHook.MethodHookParam
+import com.sevtinge.hyperceiler.xposedcompat.XC_MethodReplacement
+import com.sevtinge.hyperceiler.xposedcompat.XposedBridge.*
+import com.sevtinge.hyperceiler.xposedcompat.XposedHelpers.*
 import dalvik.system.BaseDexClassLoader
-import de.robv.android.xposed.XC_MethodHook
-import de.robv.android.xposed.XC_MethodHook.MethodHookParam
-import de.robv.android.xposed.XC_MethodReplacement
-import de.robv.android.xposed.XposedBridge.*
-import de.robv.android.xposed.XposedHelpers.*
-import de.robv.android.xposed.callbacks.XC_LayoutInflated
 import java.lang.reflect.Field
 import java.lang.reflect.Member
 import java.lang.reflect.Modifier
@@ -426,39 +423,6 @@ fun <T> T.setBooleanField(field: String?, value: Boolean) = apply {
 
 fun <T> T.setObjectField(field: String?, value: Any?) = apply {
     setObjectField(this, field, value)
-}
-
-inline fun XResources.hookLayout(
-    id: Int, crossinline hooker: (XC_LayoutInflated.LayoutInflatedParam) -> Unit
-) {
-    try {
-        hookLayout(id, object : XC_LayoutInflated() {
-            override fun handleLayoutInflated(liparam: LayoutInflatedParam) {
-                try {
-                    hooker(liparam)
-                } catch (e: Throwable) {
-                    Log.e(e)
-                }
-            }
-        })
-    } catch (e: Throwable) {
-        Log.e(e)
-    }
-}
-
-@SuppressLint("DiscouragedApi")
-inline fun XResources.hookLayout(
-    pkg: String,
-    type: String,
-    name: String,
-    crossinline hooker: (XC_LayoutInflated.LayoutInflatedParam) -> Unit
-) {
-    try {
-        val id = getIdentifier(name, type, pkg)
-        hookLayout(id, hooker)
-    } catch (e: Throwable) {
-        Log.e(e)
-    }
 }
 
 fun Class<*>.findFirstFieldByExactType(type: Class<*>): Field =

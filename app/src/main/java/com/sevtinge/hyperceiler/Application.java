@@ -19,19 +19,53 @@
 package com.sevtinge.hyperceiler;
 
 import android.content.Context;
+import android.util.Log;
 
+import androidx.annotation.NonNull;
+
+import com.sevtinge.hyperceiler.module.base.tool.AppsTool;
+import com.sevtinge.hyperceiler.utils.DialogHelper;
 import com.sevtinge.hyperceiler.utils.prefs.PrefsUtils;
 
-public class Application extends android.app.Application {
+import io.github.libxposed.service.XposedService;
+import io.github.libxposed.service.XposedServiceHelper;
+
+public class Application extends android.app.Application implements XposedServiceHelper.OnServiceListener {
+
+    private static final String TAG = "HyperCeilerApp";
 
     @Override
     protected void attachBaseContext(Context base) {
         PrefsUtils.mSharedPreferences = PrefsUtils.getSharedPrefs(base);
+        PrefsUtils.initAppRemoteSync(PrefsUtils.mSharedPreferences);
+        XposedServiceHelper.registerListener(this);
         super.attachBaseContext(base);
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
+    }
+
+    @Override
+    public void onServiceBind(@NonNull XposedService service) {
+        AppsTool.isModuleActive = true;
+        try {
+            AppsTool.XposedVersion = service.getApiVersion();
+        } catch (Throwable t) {
+            Log.w(TAG, "Failed to get Xposed API version", t);
+        }
+        DialogHelper.dismissXposedActivateDialogIfShowing();
+        try {
+            PrefsUtils.setRemotePrefs(service.getRemotePreferences(PrefsUtils.REMOTE_PREFS_GROUP));
+        } catch (Throwable t) {
+            Log.e(TAG, "Failed to get remote preferences", t);
+        }
+    }
+
+    @Override
+    public void onServiceDied(@NonNull XposedService service) {
+        AppsTool.isModuleActive = false;
+        PrefsUtils.setRemotePrefs(null);
     }
 }

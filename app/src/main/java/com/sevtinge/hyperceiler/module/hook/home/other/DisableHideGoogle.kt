@@ -21,7 +21,7 @@ package com.sevtinge.hyperceiler.module.hook.home.other
 import android.content.*
 import com.sevtinge.hyperceiler.module.base.*
 import com.sevtinge.hyperceiler.utils.*
-import de.robv.android.xposed.*
+import com.sevtinge.hyperceiler.xposedcompat.*
 
 @Suppress("UNCHECKED_CAST")
 object DisableHideGoogle : BaseHook() {

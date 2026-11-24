@@ -21,7 +21,7 @@ package com.sevtinge.hyperceiler.module.hook.systemui
 import com.github.kyuubiran.ezxhelper.*
 import com.sevtinge.hyperceiler.utils.*
 
-import de.robv.android.xposed.XposedHelpers.*
+import com.sevtinge.hyperceiler.xposedcompat.XposedHelpers.*
 
 @Suppress("MemberVisibilityCanBePrivate")
 object Dependency {

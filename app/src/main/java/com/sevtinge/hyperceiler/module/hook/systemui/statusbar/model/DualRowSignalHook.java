@@ -37,8 +37,8 @@ import com.sevtinge.hyperceiler.utils.api.ProjectApi;
 import java.util.HashMap;
 import java.util.List;
 
-import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XposedHelpers;
+import com.sevtinge.hyperceiler.xposedcompat.XC_MethodHook;
+import com.sevtinge.hyperceiler.xposedcompat.XposedHelpers;
 
 public class DualRowSignalHook extends BaseHook {
     private final int rightMargin = mPrefsMap.getInt("system_ui_statusbar_mobile_network_icon_right_margin", 8) - 8;

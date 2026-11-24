@@ -27,7 +27,7 @@ import com.sevtinge.hyperceiler.utils.blur.BlurUtils;
 
 import java.lang.reflect.Field;
 
-import de.robv.android.xposed.XposedHelpers;
+import com.sevtinge.hyperceiler.xposedcompat.XposedHelpers;
 
 public class NotificationBlur extends BaseHook {
 

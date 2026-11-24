@@ -38,7 +38,8 @@ import com.github.kyuubiran.ezxhelper.finders.MethodFinder.`-Static`.methodFinde
 import com.sevtinge.hyperceiler.module.base.*
 import com.sevtinge.hyperceiler.utils.*
 import com.sevtinge.hyperceiler.utils.devicesdk.*
-import de.robv.android.xposed.*
+import com.sevtinge.hyperceiler.xposedcompat.*
+import com.sevtinge.hyperceiler.xposedcompat.AndroidAppHelper
 import java.io.*
 import java.math.*
 import kotlin.math.*

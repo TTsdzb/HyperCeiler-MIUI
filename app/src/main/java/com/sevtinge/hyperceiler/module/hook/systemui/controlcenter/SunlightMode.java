@@ -43,8 +43,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Objects;
 
-import de.robv.android.xposed.XC_MethodHook.MethodHookParam;
-import de.robv.android.xposed.XposedHelpers;
+import com.sevtinge.hyperceiler.xposedcompat.XC_MethodHook.MethodHookParam;
+import com.sevtinge.hyperceiler.xposedcompat.XposedHelpers;
 
 public class SunlightMode extends TileUtils {
     public static String path = null;

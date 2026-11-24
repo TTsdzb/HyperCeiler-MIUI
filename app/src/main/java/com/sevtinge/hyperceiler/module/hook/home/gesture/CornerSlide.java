@@ -18,15 +18,15 @@
 */
 package com.sevtinge.hyperceiler.module.hook.home.gesture;
 
-import android.app.AndroidAppHelper;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.MotionEvent;
 
 import com.sevtinge.hyperceiler.module.hook.GlobalActions;
 import com.sevtinge.hyperceiler.module.base.BaseHook;
+import com.sevtinge.hyperceiler.xposedcompat.AndroidAppHelper;
 
-import de.robv.android.xposed.XposedHelpers;
+import com.sevtinge.hyperceiler.xposedcompat.XposedHelpers;
 
 public class CornerSlide extends BaseHook {
     public int inDirection = 0;

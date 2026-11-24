@@ -30,8 +30,8 @@ import com.github.kyuubiran.ezxhelper.finders.MethodFinder.`-Static`.methodFinde
 import com.sevtinge.hyperceiler.module.hook.systemui.controlcenter.FlashLight.FlashBrightness.*
 import com.sevtinge.hyperceiler.utils.*
 import com.sevtinge.hyperceiler.utils.shell.*
-import de.robv.android.xposed.*
-import de.robv.android.xposed.XC_MethodHook.MethodHookParam
+import com.sevtinge.hyperceiler.xposedcompat.*
+import com.sevtinge.hyperceiler.xposedcompat.XC_MethodHook.MethodHookParam
 import java.io.*
 
 

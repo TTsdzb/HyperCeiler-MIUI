@@ -5,7 +5,8 @@ plugins {
 
 android {
     namespace = "com.android.internal"
-    compileSdk = 35
+    compileSdk = 37
+    compileSdkMinor = 2
     buildTypes {
         release {
             isMinifyEnabled = false

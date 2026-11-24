@@ -40,8 +40,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import de.robv.android.xposed.XposedBridge;
-import de.robv.android.xposed.XposedHelpers;
+import com.sevtinge.hyperceiler.xposedcompat.XposedBridge;
+import com.sevtinge.hyperceiler.xposedcompat.XposedHelpers;
 
 public class CleanOpenMenu extends BaseHook {
 

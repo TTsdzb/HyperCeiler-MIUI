@@ -19,7 +19,7 @@
 package com.sevtinge.hyperceiler.module.hook.screenshot
 
 import com.sevtinge.hyperceiler.module.base.BaseHook
-import de.robv.android.xposed.XposedHelpers
+import com.sevtinge.hyperceiler.xposedcompat.XposedHelpers
 
 object SaveToPictures : BaseHook() {
     override fun init() {

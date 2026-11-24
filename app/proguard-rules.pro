@@ -1,4 +1,13 @@
 -keep class com.sevtinge.hyperceiler.XposedInit
+-dontwarn io.github.libxposed.annotation.**
+-adaptresourcefilecontents META-INF/xposed/java_init.list
+-keep,allowoptimization public class * extends io.github.libxposed.api.XposedModule {
+    public <init>();
+}
+-keep class com.sevtinge.hyperceiler.xposedcompat.** { *; }
+-keep class com.sevtinge.hyperceiler.xposedcompat.XposedCompatRuntime { *; }
+-keep class io.github.libxposed.service.** { *; }
+-keep class com.sevtinge.hyperceiler.utils.prefs.** { *; }
 -keep class com.sevtinge.hyperceiler.module.skip.SystemFrameworkForCorePatch
 -keep class com.sevtinge.hyperceiler.ui.activity.LauncherActivity
 -keep class com.sevtinge.hyperceiler.utils.blur.*

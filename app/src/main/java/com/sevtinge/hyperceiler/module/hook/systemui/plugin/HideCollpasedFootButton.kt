@@ -3,7 +3,7 @@ package com.sevtinge.hyperceiler.module.hook.systemui.plugin
 import android.view.*
 import com.github.kyuubiran.ezxhelper.ClassUtils.loadClass
 import com.sevtinge.hyperceiler.utils.devicesdk.*
-import de.robv.android.xposed.*
+import com.sevtinge.hyperceiler.xposedcompat.*
 
 object HideCollpasedFootButton {
     fun initLoaderHook(classLoader: ClassLoader) {

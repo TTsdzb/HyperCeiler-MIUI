@@ -24,8 +24,8 @@ import android.view.View;
 
 import com.sevtinge.hyperceiler.module.base.BaseHook;
 
-import de.robv.android.xposed.XC_MethodHook.MethodHookParam;
-import de.robv.android.xposed.XposedHelpers;
+import com.sevtinge.hyperceiler.xposedcompat.XC_MethodHook.MethodHookParam;
+import com.sevtinge.hyperceiler.xposedcompat.XposedHelpers;
 
 public class MobileNetwork extends BaseHook {
     Class<?> mStatusBarMobileView;

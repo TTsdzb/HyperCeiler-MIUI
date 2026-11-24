@@ -24,19 +24,16 @@ import android.util.Log;
 import android.view.SurfaceControl;
 
 import com.sevtinge.hyperceiler.module.base.BaseHook;
+import com.sevtinge.hyperceiler.xposedcompat.XC_MethodReplacement;
+import com.sevtinge.hyperceiler.xposedcompat.XposedBridge;
+import com.sevtinge.hyperceiler.xposedcompat.XposedHelpers;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
-
-import de.robv.android.xposed.XC_MethodReplacement;
-import de.robv.android.xposed.XposedBridge;
-import de.robv.android.xposed.XposedHelpers;
 
 public class FlagSecure extends BaseHook {
 
@@ -45,35 +42,22 @@ public class FlagSecure extends BaseHook {
         findAndHookMethod("com.android.server.wm.WindowState", "isSecureLocked", XC_MethodReplacement.returnConstant(false));
     }*/
 
-    private static final Method deoptimizeMethod;
     private static Field captureSecureLayersField;
 
-    static {
-        Method m = null;
-        try {
-            m = XposedBridge.class.getDeclaredMethod("deoptimizeMethod", Member.class);
-        } catch (Throwable t) {
-            XposedBridge.log(t);
-        }
-        deoptimizeMethod = m;
-    }
-
-    static void deoptimizeMethods(Class<?> clazz, String... names) throws InvocationTargetException, IllegalAccessException {
+    static void deoptimizeMethods(Class<?> clazz, String... names) {
         var list = Arrays.asList(names);
         for (Method method : clazz.getDeclaredMethods()) {
-            if (deoptimizeMethod != null && list.contains(method.getName())) {
-                deoptimizeMethod.invoke(null, method);
+            if (list.contains(method.getName())) {
+                XposedBridge.deoptimizeMethod(method);
                 Log.d("FlagSecure", "Deoptimized " + method);
             }
         }
     }
 
-    static void deoptimizeConstructors(Class<?> clazz) throws InvocationTargetException, IllegalAccessException {
+    static void deoptimizeConstructors(Class<?> clazz) {
         for (Constructor<?> constructor : clazz.getDeclaredConstructors()) {
-            if (deoptimizeMethod != null) {
-                deoptimizeMethod.invoke(null, constructor);
-                Log.d("DisableFlagSecure", "Deoptimized constructor " + constructor);
-            }
+            XposedBridge.deoptimizeMethod(constructor);
+            Log.d("DisableFlagSecure", "Deoptimized constructor " + constructor);
         }
     }
 

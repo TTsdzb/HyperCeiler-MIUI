@@ -39,8 +39,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import de.robv.android.xposed.XposedHelpers;
-import de.robv.android.xposed.callbacks.XC_LoadPackage;
+import com.sevtinge.hyperceiler.xposedcompat.XposedHelpers;
+import com.sevtinge.hyperceiler.xposedcompat.callbacks.XC_LoadPackage;
 
 /**
  * 推荐使用的方法，直接 Hook 系统，

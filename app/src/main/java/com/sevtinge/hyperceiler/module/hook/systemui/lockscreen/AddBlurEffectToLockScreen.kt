@@ -25,9 +25,9 @@ import android.widget.ImageView
 import com.sevtinge.hyperceiler.module.base.BaseHook
 import com.sevtinge.hyperceiler.utils.devicesdk.isAndroidVersion
 import com.sevtinge.hyperceiler.utils.getValueByField
-import de.robv.android.xposed.XC_MethodHook
-import de.robv.android.xposed.XposedBridge
-import de.robv.android.xposed.XposedHelpers
+import com.sevtinge.hyperceiler.xposedcompat.XC_MethodHook
+import com.sevtinge.hyperceiler.xposedcompat.XposedBridge
+import com.sevtinge.hyperceiler.xposedcompat.XposedHelpers
 
 object AddBlurEffectToLockScreen : BaseHook() {
     override fun init() {

@@ -24,8 +24,8 @@ import android.view.Window;
 
 import com.sevtinge.hyperceiler.module.base.BaseHook;
 
-import de.robv.android.xposed.XC_MethodReplacement;
-import de.robv.android.xposed.XposedHelpers;
+import com.sevtinge.hyperceiler.xposedcompat.XC_MethodReplacement;
+import com.sevtinge.hyperceiler.xposedcompat.XposedHelpers;
 
 public class BlurOverlay extends BaseHook {
 

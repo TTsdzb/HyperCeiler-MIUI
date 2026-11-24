@@ -32,7 +32,10 @@ import static com.sevtinge.hyperceiler.utils.log.XposedLogUtils.logE;
 import static com.sevtinge.hyperceiler.utils.log.XposedLogUtils.logI;
 import static com.sevtinge.hyperceiler.utils.prefs.PrefsUtils.mPrefsMap;
 
-import android.os.Process;
+import android.content.SharedPreferences;
+import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import com.github.kyuubiran.ezxhelper.EzXHelper;
 import com.hchen.hooktool.HCInit;
@@ -54,22 +57,21 @@ import com.sevtinge.hyperceiler.safe.CrashHook;
 import com.sevtinge.hyperceiler.utils.api.ProjectApi;
 import com.sevtinge.hyperceiler.utils.log.LogManager;
 import com.sevtinge.hyperceiler.utils.prefs.PrefsUtils;
+import com.sevtinge.hyperceiler.xposedcompat.IXposedHookZygoteInit;
+import com.sevtinge.hyperceiler.xposedcompat.XposedBridge;
+import com.sevtinge.hyperceiler.xposedcompat.XposedCompatRuntime;
+import com.sevtinge.hyperceiler.xposedcompat.callbacks.XC_LoadPackage;
 
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
 
-import de.robv.android.xposed.IXposedHookLoadPackage;
-import de.robv.android.xposed.IXposedHookZygoteInit;
-import de.robv.android.xposed.XSharedPreferences;
-import de.robv.android.xposed.XposedBridge;
-import de.robv.android.xposed.XposedHelpers;
-import de.robv.android.xposed.callbacks.XC_LoadPackage;
+import io.github.libxposed.api.XposedModule;
 
-public class XposedInit implements IXposedHookZygoteInit, IXposedHookLoadPackage {
+public class XposedInit extends XposedModule {
     private static final String TAG = "HyperCeiler";
     public static String mModulePath = null;
     public static ResourcesTool mResHook;
@@ -77,93 +79,194 @@ public class XposedInit implements IXposedHookZygoteInit, IXposedHookLoadPackage
     // public static XmlTool mXmlTool;
     public final VariousThirdApps mVariousThirdApps = new VariousThirdApps();
 
+    private volatile String mProcessName = null;
+    private IXposedHookZygoteInit.StartupParam mStartupParam = null;
+    private volatile boolean mRemotePrefsLoaded = false;
+    private boolean mWarnedRemotePrefsUnavailable = false;
+    private boolean mZygoteHooksLoaded = false;
+    private final Set<String> mLoadedPackages = ConcurrentHashMap.newKeySet();
+
+    public XposedInit() {
+        super();
+    }
+
     @Override
-    public void initZygote(StartupParam startupParam) throws Throwable {
-        // load ResourcesTool
-        mResHook = new ResourcesTool(startupParam.modulePath);
-        mModulePath = startupParam.modulePath;
+    public void onModuleLoaded(@NonNull ModuleLoadedParam param) {
+        XposedCompatRuntime.init(this);
+        mProcessName = param.getProcessName();
+        mModulePath = getModuleApplicationInfo().sourceDir;
+        mResHook = new ResourcesTool(mModulePath);
         // mXmlTool = new XmlTool(startupParam);
+
+        IXposedHookZygoteInit.StartupParam startupParam = new IXposedHookZygoteInit.StartupParam();
+        startupParam.modulePath = mModulePath;
+        startupParam.startsSystemServer = param.isSystemServer();
+        mStartupParam = startupParam;
 
         // load EzXHelper and set log tag
         EzXHelper.initZygote(startupParam);
         EzXHelper.setLogTag(TAG);
         EzXHelper.setToastTag(TAG);
 
+        // load remote SharedPreferences before LogManager/zygote hooks read mPrefsMap
+        ensureRemotePrefsLoaded();
+
         // load HCInit
         HCInit.initBasicData(new HCInit.BasicData()
                 .setModulePackageName(BuildConfig.APPLICATION_ID)
                 .setLogLevel(LogManager.getLogLevel())
-                .setTag("HyperCeiler")
+                .setTag(TAG)
         );
         HCInit.initStartupParam(startupParam);
 
-        // load New XSPrefs
-        setXSharedPrefs();
-        // load CorePatch
-        new SystemFrameworkForCorePatch().initZygote(startupParam);
-        // load ZygoteHook
-        loadZygoteHook(startupParam);
+        if (mRemotePrefsLoaded) {
+            ensureZygoteHooksLoaded(param.isSystemServer());
+        }
     }
 
     @Override
-    public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
-        if (isInSafeMode(lpparam.packageName)) return;
+    public void onSystemServerStarting(@NonNull SystemServerStartingParam param) {
+        ensureRemotePrefsLoaded();
+        ensureZygoteHooksLoaded(true);
 
-        // load EzXHelper and set log tag
+        XC_LoadPackage.LoadPackageParam lpparam = new XC_LoadPackage.LoadPackageParam();
+        lpparam.packageName = "android";
+        lpparam.processName = "android";
+        lpparam.classLoader = param.getClassLoader();
+        lpparam.appInfo = null;
+        lpparam.isFirstApplication = true;
+
+        if (isInSafeMode("android")) return;
+
         EzXHelper.initHandleLoadPackage(lpparam);
         EzXHelper.setLogTag(TAG);
         EzXHelper.setToastTag(TAG);
 
-        // load CorePatch
-        new SystemFrameworkForCorePatch().handleLoadPackage(lpparam);
-        // load Module hook apps
+        if (mPrefsMap.getBoolean("system_framework_allow_uninstall")) {
+            try {
+                new AllowUninstall().hookServicesClassLoader(param.getClassLoader());
+            } catch (Throwable t) {
+                logE(TAG, t);
+            }
+        }
+
+        try {
+            IXposedHookZygoteInit.StartupParam systemStartupParam = new IXposedHookZygoteInit.StartupParam();
+            systemStartupParam.modulePath = mModulePath;
+            systemStartupParam.startsSystemServer = true;
+            SystemFrameworkForCorePatch corePatch = new SystemFrameworkForCorePatch();
+            corePatch.initZygote(systemStartupParam);
+            corePatch.handleLoadPackage(lpparam);
+        } catch (Throwable t) {
+            logE(TAG, t);
+        }
+
         init(lpparam);
     }
 
-    private static void loadZygoteHook(StartupParam startupParam) throws Throwable {
-        if (mPrefsMap.getBoolean("system_framework_screen_all_rotations")) ScreenRotation.initRes();
-        if (mPrefsMap.getBoolean("system_framework_clean_share_menu")) CleanShareMenu.initRes();
-        if (mPrefsMap.getBoolean("system_framework_clean_open_menu")) CleanOpenMenu.initRes();
-        if (mPrefsMap.getBoolean("system_framework_volume_separate_control"))
-            VolumeSeparateControlForSettings.initRes();
+    @Override
+    public void onPackageReady(@NonNull PackageReadyParam param) {
+        String packageName = param.getPackageName();
+        if (ProjectApi.mAppModulePkg.equals(packageName)) {
+            return;
+        }
 
-        if (startupParam != null) {
-            new BackgroundBlurDrawable().initZygote(startupParam);
+        ensureRemotePrefsLoaded();
+        ensureZygoteHooksLoaded(false);
 
-            if (mPrefsMap.getBoolean("system_framework_allow_uninstall"))
-                new AllowUninstall().initZygote(startupParam);
-            if (mPrefsMap.getBoolean("system_framework_allow_manage_all_notifications"))
-                new AllowManageAllNotifications().initZygote(startupParam);
-            if (mPrefsMap.getBoolean("system_framework_background_blur_toast"))
-                new ToastBlur().initZygote(startupParam);
-            if (mPrefsMap.getBoolean("aod_unlock_always_on_display_hyper"))
-                new UnlockAlwaysOnDisplay().initZygote(startupParam);
+        XC_LoadPackage.LoadPackageParam lpparam = new XC_LoadPackage.LoadPackageParam();
+        lpparam.packageName = packageName;
+        lpparam.processName = mProcessName != null ? mProcessName : packageName;
+        lpparam.classLoader = param.getClassLoader();
+        lpparam.appInfo = param.getApplicationInfo();
+        lpparam.isFirstApplication = param.isFirstPackage();
+
+        String dedupKey = lpparam.packageName + "@" + System.identityHashCode(lpparam.classLoader);
+        if (!mLoadedPackages.add(dedupKey)) {
+            return;
+        }
+
+        if (isInSafeMode(lpparam.packageName)) return;
+
+        EzXHelper.initHandleLoadPackage(lpparam);
+        EzXHelper.setLogTag(TAG);
+        EzXHelper.setToastTag(TAG);
+
+        init(lpparam);
+    }
+
+    private synchronized void ensureRemotePrefsLoaded() {
+        if (mRemotePrefsLoaded) {
+            return;
+        }
+        try {
+            SharedPreferences remotePrefs = getRemotePreferences(PrefsUtils.REMOTE_PREFS_GROUP);
+            if (remotePrefs != null) {
+                PrefsUtils.initForHook(remotePrefs);
+                mRemotePrefsLoaded = true;
+                return;
+            }
+        } catch (Throwable t) {
+            if (!mWarnedRemotePrefsUnavailable) {
+                mWarnedRemotePrefsUnavailable = true;
+                log(Log.WARN, TAG, "Cannot read remote preferences at bootstrap, will retry", t);
+            }
+            return;
+        }
+        if (!mWarnedRemotePrefsUnavailable) {
+            mWarnedRemotePrefsUnavailable = true;
+            log(Log.WARN, TAG, "Remote preferences returned null at bootstrap, will retry");
         }
     }
 
-    private void setXSharedPrefs() {
-        if (mPrefsMap.isEmpty()) {
-            XSharedPreferences mXSharedPreferences;
+    private synchronized void ensureZygoteHooksLoaded(boolean startsSystemServer) {
+        if (!mRemotePrefsLoaded || mZygoteHooksLoaded) {
+            return;
+        }
+        mZygoteHooksLoaded = true;
+
+        IXposedHookZygoteInit.StartupParam startupParam = mStartupParam;
+        if (startupParam == null) {
+            startupParam = new IXposedHookZygoteInit.StartupParam();
+            startupParam.modulePath = mModulePath;
+            startupParam.startsSystemServer = startsSystemServer;
+            mStartupParam = startupParam;
+        }
+
+        try {
+            if (mPrefsMap.getBoolean("system_framework_screen_all_rotations")) ScreenRotation.initRes();
+            if (mPrefsMap.getBoolean("system_framework_clean_share_menu")) CleanShareMenu.initRes();
+            if (mPrefsMap.getBoolean("system_framework_clean_open_menu")) CleanOpenMenu.initRes();
+            if (mPrefsMap.getBoolean("system_framework_volume_separate_control"))
+                VolumeSeparateControlForSettings.initRes();
+        } catch (Throwable t) {
+            logE(TAG, t);
+        }
+
+        try {
+            new BackgroundBlurDrawable().initZygote(startupParam);
+        } catch (Throwable t) {
+            logE(TAG, t);
+        }
+        if (mPrefsMap.getBoolean("system_framework_allow_manage_all_notifications")) {
             try {
-                mXSharedPreferences = new XSharedPreferences(ProjectApi.mAppModulePkg, PrefsUtils.mPrefsName);
-                mXSharedPreferences.makeWorldReadable();
-                Map<String, ?> allPrefs = mXSharedPreferences.getAll();
-
-                if (allPrefs != null && !allPrefs.isEmpty()) {
-                    mPrefsMap.putAll(allPrefs);
-                } else {
-                    mXSharedPreferences = new XSharedPreferences(new File(PrefsUtils.mPrefsFile));
-                    mXSharedPreferences.makeWorldReadable();
-                    allPrefs = mXSharedPreferences.getAll();
-
-                    if (allPrefs != null && !allPrefs.isEmpty()) {
-                        mPrefsMap.putAll(allPrefs);
-                    } else {
-                        logE("[UID" + Process.myUid() + "]", "Cannot read SharedPreferences, some mods might not work!");
-                    }
-                }
+                new AllowManageAllNotifications().initZygote(startupParam);
             } catch (Throwable t) {
-                logE("setXSharedPrefs", t);
+                logE(TAG, t);
+            }
+        }
+        if (mPrefsMap.getBoolean("system_framework_background_blur_toast")) {
+            try {
+                new ToastBlur().initZygote(startupParam);
+            } catch (Throwable t) {
+                logE(TAG, t);
+            }
+        }
+        if (mPrefsMap.getBoolean("aod_unlock_always_on_display_hyper")) {
+            try {
+                new UnlockAlwaysOnDisplay().initZygote(startupParam);
+            } catch (Throwable t) {
+                logE(TAG, t);
             }
         }
     }
@@ -184,7 +287,6 @@ public class XposedInit implements IXposedHookZygoteInit, IXposedHookLoadPackage
         if (mPkgName == null) return;
 
         if (ProjectApi.mAppModulePkg.equals(mPkgName)) {
-            moduleActiveHook(lpparam);
             return;
         }
 
@@ -257,15 +359,6 @@ public class XposedInit implements IXposedHookZygoteInit, IXposedHookLoadPackage
             }
         }
     }
-
-    public void moduleActiveHook(XC_LoadPackage.LoadPackageParam lpparam) {
-        Class<?> AppsTool = XposedHelpers.findClassIfExists(ProjectApi.mAppModulePkg + ".module.base.tool.AppsTool", lpparam.classLoader);
-
-        XposedHelpers.setStaticBooleanField(AppsTool, "isModuleActive", true);
-        XposedHelpers.setStaticIntField(AppsTool, "XposedVersion", XposedBridge.getXposedVersion());
-        XposedBridge.log("[HyperCeiler][I]: Log level is " + logLevelDesc());
-    }
-
 
     private boolean isSafeModeEnable(String key) {
         return mPrefsMap.getBoolean(key);

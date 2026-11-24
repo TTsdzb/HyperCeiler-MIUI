@@ -29,8 +29,8 @@ import android.util.ArrayMap;
 import com.sevtinge.hyperceiler.R;
 import com.sevtinge.hyperceiler.utils.TileUtils;
 
-import de.robv.android.xposed.XC_MethodHook.MethodHookParam;
-import de.robv.android.xposed.XposedHelpers;
+import com.sevtinge.hyperceiler.xposedcompat.XC_MethodHook.MethodHookParam;
+import com.sevtinge.hyperceiler.xposedcompat.XposedHelpers;
 
 public class GmsTile extends TileUtils {
     public final String CheckGms = "com.google.android.gms";

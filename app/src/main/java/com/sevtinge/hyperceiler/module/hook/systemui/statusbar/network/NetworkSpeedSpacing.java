@@ -26,7 +26,7 @@ import android.os.Message;
 
 import com.sevtinge.hyperceiler.module.base.BaseHook;
 
-import de.robv.android.xposed.XposedHelpers;
+import com.sevtinge.hyperceiler.xposedcompat.XposedHelpers;
 
 public class NetworkSpeedSpacing extends BaseHook {
     public boolean handler;

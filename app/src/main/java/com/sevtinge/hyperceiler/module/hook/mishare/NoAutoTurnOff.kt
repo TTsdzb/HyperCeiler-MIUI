@@ -31,7 +31,7 @@ import com.sevtinge.hyperceiler.module.base.tool.HookTool.*
 import com.sevtinge.hyperceiler.utils.*
 import com.sevtinge.hyperceiler.utils.devicesdk.*
 import com.sevtinge.hyperceiler.utils.log.*
-import de.robv.android.xposed.*
+import com.sevtinge.hyperceiler.xposedcompat.*
 import org.luckypray.dexkit.*
 import org.luckypray.dexkit.query.*
 import org.luckypray.dexkit.query.matchers.*

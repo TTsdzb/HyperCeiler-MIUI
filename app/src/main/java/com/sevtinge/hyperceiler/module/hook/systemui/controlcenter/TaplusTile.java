@@ -32,8 +32,8 @@ import androidx.annotation.Nullable;
 import com.sevtinge.hyperceiler.R;
 import com.sevtinge.hyperceiler.utils.TileUtils;
 
-import de.robv.android.xposed.XC_MethodHook.MethodHookParam;
-import de.robv.android.xposed.XposedHelpers;
+import com.sevtinge.hyperceiler.xposedcompat.XC_MethodHook.MethodHookParam;
+import com.sevtinge.hyperceiler.xposedcompat.XposedHelpers;
 
 public class TaplusTile extends TileUtils {
     public final String mNightModeTile = "com.android.systemui.qs.tiles.NightModeTile";

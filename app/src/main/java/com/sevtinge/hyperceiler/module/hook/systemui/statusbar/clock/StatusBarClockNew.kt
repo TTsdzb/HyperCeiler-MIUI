@@ -36,7 +36,7 @@ import com.sevtinge.hyperceiler.utils.*
 import com.sevtinge.hyperceiler.utils.api.LazyClass.mNewClockClass
 import com.sevtinge.hyperceiler.utils.devicesdk.*
 import com.sevtinge.hyperceiler.utils.devicesdk.DisplayUtils.*
-import de.robv.android.xposed.*
+import com.sevtinge.hyperceiler.xposedcompat.*
 import java.lang.reflect.*
 import java.util.*
 import kotlin.Pair

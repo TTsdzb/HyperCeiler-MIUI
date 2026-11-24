@@ -18,8 +18,8 @@
  */
 package com.sevtinge.hyperceiler.module.hook.systemsettings;
 
-import static de.robv.android.xposed.XposedHelpers.getStaticBooleanField;
-import static de.robv.android.xposed.XposedHelpers.setStaticBooleanField;
+import static com.sevtinge.hyperceiler.xposedcompat.XposedHelpers.getStaticBooleanField;
+import static com.sevtinge.hyperceiler.xposedcompat.XposedHelpers.setStaticBooleanField;
 
 import android.content.Context;
 

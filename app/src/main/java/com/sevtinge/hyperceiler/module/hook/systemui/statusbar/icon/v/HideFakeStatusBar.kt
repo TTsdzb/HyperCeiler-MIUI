@@ -38,7 +38,7 @@ import com.sevtinge.hyperceiler.module.base.*
 import com.sevtinge.hyperceiler.module.base.MusicBaseHook.Companion.CHANNEL_ID
 import com.sevtinge.hyperceiler.utils.*
 import com.sevtinge.hyperceiler.utils.api.LazyClass.miuiConfigs
-import de.robv.android.xposed.*
+import com.sevtinge.hyperceiler.xposedcompat.*
 import kotlinx.coroutines.flow.*
 
 @SuppressLint("StaticFieldLeak")

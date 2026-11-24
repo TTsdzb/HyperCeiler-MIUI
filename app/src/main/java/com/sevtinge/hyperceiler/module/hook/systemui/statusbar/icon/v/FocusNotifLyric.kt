@@ -30,7 +30,7 @@ import com.github.kyuubiran.ezxhelper.finders.ConstructorFinder.`-Static`.constr
 import com.github.kyuubiran.ezxhelper.finders.MethodFinder.`-Static`.methodFinder
 import com.sevtinge.hyperceiler.module.base.*
 import com.sevtinge.hyperceiler.utils.*
-import de.robv.android.xposed.*
+import com.sevtinge.hyperceiler.xposedcompat.*
 
 // author git@wuyou-123
 // co-author git@lingqiqi5211

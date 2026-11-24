@@ -1,7 +1,7 @@
 package com.sevtinge.hyperceiler.utils.api
 
 import android.content.*
-import de.robv.android.xposed.*
+import com.sevtinge.hyperceiler.xposedcompat.*
 import java.lang.ref.*
 
 

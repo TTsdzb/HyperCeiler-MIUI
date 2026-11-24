@@ -34,6 +34,7 @@ import com.sevtinge.hyperceiler.module.base.*
 import com.sevtinge.hyperceiler.module.base.dexkit.*
 import com.sevtinge.hyperceiler.utils.*
 import com.sevtinge.hyperceiler.utils.devicesdk.DisplayUtils.*
+import com.sevtinge.hyperceiler.xposedcompat.AndroidAppHelper
 import java.lang.reflect.*
 
 object ShowBatteryTemperatureNew : BaseHook() {

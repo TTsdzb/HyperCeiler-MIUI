@@ -27,7 +27,7 @@ import com.sevtinge.hyperceiler.module.hook.home.*
 import com.sevtinge.hyperceiler.utils.*
 import com.sevtinge.hyperceiler.utils.devicesdk.*
 import com.sevtinge.hyperceiler.utils.extension.*
-import de.robv.android.xposed.*
+import com.sevtinge.hyperceiler.xposedcompat.*
 
 object FolderColumns : HomeBaseHook() {
     private const val FOLDER = "com.miui.home.launcher.Folder"

@@ -77,6 +77,7 @@
         android:name=".Application"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:description="@string/xposed_description"
         android:requestLegacyExternalStorage="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
@@ -147,21 +148,6 @@
         <meta-data
             android:name="required_permissions"
             android:value=";" />
-        <meta-data
-            android:name="xposedmodule"
-            android:value="true" />
-        <meta-data
-            android:name="xposedminversion"
-            android:value="93" />
-        <meta-data
-            android:name="xposeddescription"
-            android:value="@string/xposed_description" />
-        <meta-data
-            android:name="xposedsharedprefs"
-            android:value="true" />
-        <meta-data
-            android:name="xposedscope"
-            android:resource="@array/xposed_scope" />
 
         <service
             android:name="com.sevtinge.hyperceiler.safe.CrashService"

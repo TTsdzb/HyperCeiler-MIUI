@@ -25,7 +25,7 @@ import android.content.Context;
 
 import com.sevtinge.hyperceiler.module.base.tool.HookTool;
 
-import de.robv.android.xposed.XposedHelpers;
+import com.sevtinge.hyperceiler.xposedcompat.XposedHelpers;
 
 public class VolumeTimerValuesHook {
     public static void initVolumeTimerValuesHook(ClassLoader classLoader) {

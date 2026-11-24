@@ -21,7 +21,7 @@ package com.sevtinge.hyperceiler.module.hook.systemui.controlcenter
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import com.sevtinge.hyperceiler.utils.prefs.*
-import de.robv.android.xposed.*
+import com.sevtinge.hyperceiler.xposedcompat.*
 
 // from YunZiA
 object CCGridForHyperOSKt {

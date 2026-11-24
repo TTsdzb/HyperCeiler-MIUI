@@ -25,7 +25,7 @@ import android.view.*
 import android.widget.*
 import com.github.kyuubiran.ezxhelper.*
 import com.github.kyuubiran.ezxhelper.MemberExtensions.isStatic
-import de.robv.android.xposed.*
+import com.sevtinge.hyperceiler.xposedcompat.*
 import java.lang.reflect.*
 
 @JvmInline

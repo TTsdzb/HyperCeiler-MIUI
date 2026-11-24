@@ -26,7 +26,7 @@ import android.view.*
 import android.widget.*
 import com.sevtinge.hyperceiler.module.base.*
 import com.sevtinge.hyperceiler.utils.*
-import de.robv.android.xposed.*
+import com.sevtinge.hyperceiler.xposedcompat.*
 import kotlin.math.*
 
 

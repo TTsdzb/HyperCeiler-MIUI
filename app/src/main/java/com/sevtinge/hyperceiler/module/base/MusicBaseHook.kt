@@ -20,8 +20,8 @@ package com.sevtinge.hyperceiler.module.base
 
 import android.annotation.*
 import android.app.*
-import android.app.AndroidAppHelper.*
 import android.content.*
+import com.sevtinge.hyperceiler.xposedcompat.AndroidAppHelper.*
 import android.graphics.drawable.*
 import android.os.*
 import androidx.core.app.*

@@ -25,7 +25,7 @@ import com.sevtinge.hyperceiler.module.base.BaseHook;
 import com.sevtinge.hyperceiler.utils.prefs.PrefType;
 import com.sevtinge.hyperceiler.utils.prefs.PrefsChangeObserver;
 
-import de.robv.android.xposed.XposedHelpers;
+import com.sevtinge.hyperceiler.xposedcompat.XposedHelpers;
 
 public class VolumeDefaultStream extends BaseHook {
 

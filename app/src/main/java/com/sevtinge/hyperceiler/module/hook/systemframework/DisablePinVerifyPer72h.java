@@ -20,7 +20,7 @@ package com.sevtinge.hyperceiler.module.hook.systemframework;
 
 import com.sevtinge.hyperceiler.module.base.BaseHook;
 
-import de.robv.android.xposed.XC_MethodReplacement;
+import com.sevtinge.hyperceiler.xposedcompat.XC_MethodReplacement;
 
 public class DisablePinVerifyPer72h extends BaseHook {
     @Override

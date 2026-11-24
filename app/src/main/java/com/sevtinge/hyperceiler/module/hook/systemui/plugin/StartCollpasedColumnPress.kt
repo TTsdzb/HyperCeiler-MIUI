@@ -5,7 +5,7 @@ import android.os.*
 import android.view.*
 import com.github.kyuubiran.ezxhelper.ClassUtils.loadClass
 import com.sevtinge.hyperceiler.utils.log.XposedLogUtils.*
-import de.robv.android.xposed.*
+import com.sevtinge.hyperceiler.xposedcompat.*
 
 object StartCollpasedColumnPress {
     fun initLoaderHook(classLoader: ClassLoader) {

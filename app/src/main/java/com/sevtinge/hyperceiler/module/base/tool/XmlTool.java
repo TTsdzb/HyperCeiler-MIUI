@@ -26,8 +26,8 @@ import com.sevtinge.hyperceiler.utils.ContextUtils;
 import java.lang.reflect.Method;
 import java.util.concurrent.ConcurrentHashMap;
 
-import de.robv.android.xposed.IXposedHookZygoteInit;
-import de.robv.android.xposed.XposedHelpers;
+import com.sevtinge.hyperceiler.xposedcompat.IXposedHookZygoteInit;
+import com.sevtinge.hyperceiler.xposedcompat.XposedHelpers;
 
 /**
  * Xml 钩子

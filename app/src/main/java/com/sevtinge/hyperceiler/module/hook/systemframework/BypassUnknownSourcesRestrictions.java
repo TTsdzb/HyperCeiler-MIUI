@@ -19,7 +19,7 @@
 
 package com.sevtinge.hyperceiler.module.hook.systemframework;
 
-import static de.robv.android.xposed.XposedHelpers.setIntField;
+import static com.sevtinge.hyperceiler.xposedcompat.XposedHelpers.setIntField;
 
 import com.sevtinge.hyperceiler.module.base.BaseHook;
 

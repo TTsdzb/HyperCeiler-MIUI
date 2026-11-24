@@ -23,10 +23,10 @@ import android.content.pm.Signature;
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 
-import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XposedBridge;
-import de.robv.android.xposed.XposedHelpers;
-import de.robv.android.xposed.callbacks.XC_LoadPackage;
+import com.sevtinge.hyperceiler.xposedcompat.XC_MethodHook;
+import com.sevtinge.hyperceiler.xposedcompat.XposedBridge;
+import com.sevtinge.hyperceiler.xposedcompat.XposedHelpers;
+import com.sevtinge.hyperceiler.xposedcompat.callbacks.XC_LoadPackage;
 
 public class CorePatchForT extends CorePatchForS {
     public static final String TAG = "[CorePatchForT]";

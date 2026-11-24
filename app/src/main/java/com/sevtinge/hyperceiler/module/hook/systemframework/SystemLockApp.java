@@ -31,7 +31,7 @@ import androidx.annotation.Nullable;
 
 import com.sevtinge.hyperceiler.module.base.BaseHook;
 
-import de.robv.android.xposed.XposedHelpers;
+import com.sevtinge.hyperceiler.xposedcompat.XposedHelpers;
 
 /**
  * @author 焕晨HChen

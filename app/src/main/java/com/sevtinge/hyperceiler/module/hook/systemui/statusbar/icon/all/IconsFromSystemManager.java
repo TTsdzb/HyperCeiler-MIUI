@@ -20,7 +20,7 @@ package com.sevtinge.hyperceiler.module.hook.systemui.statusbar.icon.all;
 
 import com.sevtinge.hyperceiler.module.base.BaseHook;
 
-import de.robv.android.xposed.XposedHelpers;
+import com.sevtinge.hyperceiler.xposedcompat.XposedHelpers;
 
 public class IconsFromSystemManager extends BaseHook {
 
