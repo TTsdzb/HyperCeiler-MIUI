@@ -1,3 +1,12 @@
+> **HyperCeiler-MIUI** 基于上游 [HyperCeiler](https://github.com/ReChronoRain/HyperCeiler) 最后一个支持 MIUI / Android 13 的版本 `2.5.156`（`a13_eol`，提交 `9bf481f5a`）分支独立维护，专为停留在 MIUI 14 / Android 13 且使用新版 LSPosed 的设备适配。
+>
+> ### 本仓库主要改动
+> 1. **迁移至现代 libxposed API 102**：接入 `io.github.libxposed:api:102.0.0` 与 `io.github.libxposed:service:102.0.0`，通过内部兼容层（`xposedcompat`、`EzXHelper`、`HookTool` 适配）及 `RemotePreferences` 配置同步替代旧版 Xposed API 82/93、`XSharedPreferences` 与 `MODE_WORLD_READABLE`，在消除旧接口废弃警告的同时**完整保留原有全部 MIUI / Android 13 功能与 Hook 行为**。
+> 2. **提高 `versionCode`**：将版本号计算基数由 `5` 调整为 `100000`（`100000 + commitCount`），避免 LSPosed 管理器持续推送上游仅支持 HyperOS 的高版本更新提醒。
+> 3. **使用说明**：在已有 `2.5.156` 上安装本分支构建后，请先打开一次 HyperCeiler 应用界面，使 `XposedService` 将原有的本地配置同步至 `RemotePreferences`，随后重启作用域应用或重启设备即可生效。
+
+---
+
 <div align="center">
 
 <img src="/imgs/icon.png" width="160" height="160" style="display: block; margin: 0 auto;" alt="icon">

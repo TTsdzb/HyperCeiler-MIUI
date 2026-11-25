@@ -62,7 +62,7 @@ val getGitCommitCount: () -> Int = {
 
 val getVersionCode: () -> Int = {
     val commitCount = getGitCommitCount()
-    val major = 5
+    val major = 100000
     major + commitCount
 }
 
